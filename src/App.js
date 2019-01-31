@@ -1,25 +1,48 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      started: false,
+      messages: []
+    };
+  }
+
+  componentDidMount() {
+    this.start();
+  }
+
+  start() {
+    this.setState({started: true});
+    const ws = new WebSocket('ws://localhost:8080');
+    ws.onopen = () => {
+      this.addMessage('Connection opened!');
+      ws.send(1);
+    };
+
+    ws.onmessage = event => {
+      this.addMessage(`Received: ${event.data}`);
+      setTimeout(() =>  ws.send(parseInt(event.data) + 1), 1000);
+    };
+
+    ws.onclose = () => {
+      this.addMessage('Connection closed!');
+      this.setState({started: false});
+    };
+  }
+
+  addMessage(message) {
+    this.setState({messages: [...this.state.messages, new Date().toISOString() + ' ' + message]});
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+        <button onClick={() => this.start()} disabled={this.state.started}>Start</button>
+        {this.state.messages.map((message, index) => (
+            <div key={index}>{message}</div>
+        ))}
       </div>
     );
   }
