@@ -14,7 +14,10 @@ class App extends Component {
   }
 
   start() {
-    this.setState({started: true});
+    this.setState({
+      started: true,
+      messages: []
+    });
     const ws = new WebSocket('ws://localhost:8080');
     ws.onopen = () => {
       this.addMessage('Connection opened!');

@@ -18,3 +18,7 @@ server.on('connection', ws => {
 });
 
 console.log('Server started!');
+
+// TODO: implement authentication using:
+//  http://iostreamer.me/ws/node.js/jwt/2016/05/08/websockets_authentication.html
+//  https://stackoverflow.com/questions/4361173/http-headers-in-websockets-client-api
