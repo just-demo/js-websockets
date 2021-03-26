@@ -15,9 +15,15 @@ server.on('connection', ws => {
         console.log(new Date().toISOString(), 'Connection closed!');
     });
     // Can set a one time message here
+    // heartbeat(ws);
 });
 
 console.log('Server started!');
+
+function heartbeat(ws) {
+    ws.send("X");
+    setTimeout(() => heartbeat(ws), 1000);
+}
 
 // TODO: implement authentication using:
 //  http://iostreamer.me/ws/node.js/jwt/2016/05/08/websockets_authentication.html
